@@ -131,6 +131,44 @@ import UIKit
         }
     }
     
+    var thumbInternalViewSizePercentage:CGFloat {
+        get {
+            return _thumbIconLayer.bounds.size.width * 100 / _thumbLayer.bounds.size.width
+        }
+        set {
+            guard newValue > 0, newValue <= 100 else { return }
+            let iconLayerSize = thumbSize * newValue / 100
+            _thumbIconLayer.bounds = CGRect(origin: .zero, size: CGSize(width: iconLayerSize, height: iconLayerSize))
+        }
+    }
+    
+    @IBInspectable var thumbBorderWidth:CGFloat {
+        set{
+            _thumbLayer.borderWidth = newValue
+        }
+        get{
+            return _thumbLayer.borderWidth
+        }
+    }
+    
+    @IBInspectable var thumbShadowOffset:CGSize {
+        set{
+            _thumbLayer.shadowOffset = newValue
+        }
+        get{
+            return _thumbLayer.shadowOffset
+        }
+    }
+    
+    @IBInspectable var thumbShadowRadius:CGFloat {
+        set{
+            _thumbLayer.shadowRadius = newValue
+        }
+        get{
+            return _thumbLayer.shadowRadius
+        }
+    }
+    
     //MARK: - Private Properties
     
     private var _value:CGFloat = 0.0 // default 0.0. this value will be pinned to min/max
@@ -141,11 +179,8 @@ import UIKit
         thumb.bounds = CGRect(x: 0, y: 0, width: defaultThumbSize, height: defaultThumbSize)
         thumb.backgroundColor = UIColor.white.cgColor
         thumb.shadowColor = UIColor.black.cgColor
-        thumb.shadowOffset = CGSize(width: 0.0, height: 2.5)
-        thumb.shadowRadius = 2.0
         thumb.shadowOpacity = 0.25
         thumb.borderColor = UIColor.black.withAlphaComponent(0.15).cgColor
-        thumb.borderWidth = 0.5
         return thumb
     }()
     
@@ -261,7 +296,7 @@ import UIKit
         _trackLayer.position = CGPoint(x: w/2.0 + left,y: h/2.0)
         
         let halfSize = thumbSize/2.0
-        var layerSize = thumbSize - 4.0
+        var layerSize = thumbSize * thumbInternalViewSizePercentage / 100
         if let icon = thumbIcon {
             layerSize = min(max(icon.size.height,icon.size.width),layerSize)
             _thumbIconLayer.cornerRadius = 0.0
