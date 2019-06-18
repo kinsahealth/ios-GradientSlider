@@ -8,9 +8,9 @@
 
 import UIKit
 
-@IBDesignable class GradientSlider: UIControl {
-    typealias TrackColorTuple = (color: UIColor, position: NSNumber)
-    typealias ColorMap = [TrackColorTuple]
+@IBDesignable public class GradientSlider: UIControl {
+    public typealias TrackColorTuple = (color: UIColor, position: NSNumber)
+    public typealias ColorMap = [TrackColorTuple]
     
     static var defaultThickness:CGFloat = 2.0
     static var defaultThumbSize:CGFloat = 28.0
@@ -21,20 +21,20 @@ import UIKit
     @IBInspectable public var maxColor:UIColor = UIColor.orange {didSet{updateTrackColors()}}
     public var colorMap:ColorMap? {didSet{updateTrackColors()}} // setting this property ignores min and max color for non rainbow track.
     
-    @IBInspectable var value: CGFloat {
+    @IBInspectable public var value: CGFloat {
         get{return _value}
         set{setValue(newValue, animated:true)}
     }
     
-    func setValue(_ value:CGFloat, animated:Bool = true) {
+    public func setValue(_ value:CGFloat, animated:Bool = true) {
         _value = max(min(value,self.maximumValue),self.minimumValue)
         updateThumbPosition(animated: animated)
     }
     
-    @IBInspectable var minimumValue: CGFloat = 0.0 // default 0.0. the current value may change if outside new min value
-    @IBInspectable var maximumValue: CGFloat = 1.0 // default 1.0. the current value may change if outside new max value
+    @IBInspectable public var minimumValue: CGFloat = 0.0 // default 0.0. the current value may change if outside new min value
+    @IBInspectable public var maximumValue: CGFloat = 1.0 // default 1.0. the current value may change if outside new max value
     
-    @IBInspectable var minimumValueImage: UIImage? = nil { // default is nil. image that appears to left of control (e.g. speaker off)
+    @IBInspectable public var minimumValueImage: UIImage? = nil { // default is nil. image that appears to left of control (e.g. speaker off)
         didSet{
             if let img = minimumValueImage {
                 let imgLayer = _minTrackImageLayer ?? {
@@ -54,7 +54,7 @@ import UIKit
             self.layer.needsLayout()
         }
     }
-    @IBInspectable var maximumValueImage: UIImage? = nil { // default is nil. image that appears to right of control (e.g. speaker max)
+    @IBInspectable public var maximumValueImage: UIImage? = nil { // default is nil. image that appears to right of control (e.g. speaker max)
         didSet{
             if let img = maximumValueImage {
                 let imgLayer = _maxTrackImageLayer ?? {
@@ -75,18 +75,18 @@ import UIKit
         }
     }
     
-    var continuous: Bool = true // if set, value change events are generated any time the value changes due to dragging. default = YES
+    public var continuous: Bool = true // if set, value change events are generated any time the value changes due to dragging. default = YES
     
-    var actionBlock:(GradientSlider,CGFloat, Bool)->() = {slider,newValue,finished in }
+    public var actionBlock:(GradientSlider,CGFloat, Bool)->() = {slider,newValue,finished in }
     
-    @IBInspectable var thickness:CGFloat = defaultThickness {
+    @IBInspectable public var thickness:CGFloat = defaultThickness {
         didSet{
             _trackLayer.cornerRadius = thickness / 2.0
             self.layer.setNeedsLayout()
         }
     }
     
-    @IBInspectable var trackBorderColor:UIColor? {
+    @IBInspectable public var trackBorderColor:UIColor? {
         set{
             _trackLayer.borderColor = newValue?.cgColor
         }
@@ -98,7 +98,7 @@ import UIKit
         }
     }
     
-    @IBInspectable var trackBorderWidth:CGFloat {
+    @IBInspectable public var trackBorderWidth:CGFloat {
         set{
             _trackLayer.borderWidth = newValue
         }
@@ -107,7 +107,7 @@ import UIKit
         }
     }
     
-    var thumbSize:CGFloat = defaultThumbSize {
+    public var thumbSize:CGFloat = defaultThumbSize {
         didSet{
             _thumbLayer.cornerRadius = thumbSize / 2.0
             _thumbLayer.bounds = CGRect(x:0, y: 0, width: thumbSize, height: thumbSize)
@@ -115,13 +115,13 @@ import UIKit
         }
     }
     
-    @IBInspectable var thumbIcon:UIImage? = nil {
+    @IBInspectable public var thumbIcon:UIImage? = nil {
         didSet{
             _thumbIconLayer.contents = thumbIcon?.cgImage
         }
     }
     
-    var thumbColor:UIColor {
+    public var thumbColor:UIColor {
         get {
             if let color = _thumbIconLayer.backgroundColor {
                 return UIColor(cgColor: color)
@@ -134,7 +134,7 @@ import UIKit
         }
     }
     
-    var thumbInternalViewSizePercentage:CGFloat {
+    public var thumbInternalViewSizePercentage:CGFloat {
         get {
             return _thumbIconLayer.bounds.size.width * 100 / _thumbLayer.bounds.size.width
         }
@@ -145,7 +145,7 @@ import UIKit
         }
     }
     
-    @IBInspectable var thumbBorderWidth:CGFloat {
+    @IBInspectable public var thumbBorderWidth:CGFloat {
         set{
             _thumbLayer.borderWidth = newValue
         }
@@ -154,7 +154,7 @@ import UIKit
         }
     }
     
-    @IBInspectable var thumbShadowOffset:CGSize {
+    @IBInspectable public var thumbShadowOffset:CGSize {
         set{
             _thumbLayer.shadowOffset = newValue
         }
@@ -163,7 +163,7 @@ import UIKit
         }
     }
     
-    @IBInspectable var thumbShadowRadius:CGFloat {
+    @IBInspectable public var thumbShadowRadius:CGFloat {
         set{
             _thumbLayer.shadowRadius = newValue
         }
@@ -238,7 +238,7 @@ import UIKit
     }
     
     
-    override func encode(with aCoder: NSCoder) {
+    override public func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         
         aCoder.encode(minColor, forKey: "minColor")
@@ -265,16 +265,16 @@ import UIKit
     }
     
     //MARK: - Layout
-    override var intrinsicContentSize:CGSize {
+    override public var intrinsicContentSize:CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: thumbSize)
     }
     
-//    func alignmentRectInsets() -> UIEdgeInsets {
-    override var alignmentRectInsets: UIEdgeInsets {
+    //    func alignmentRectInsets() -> UIEdgeInsets {
+    override public var alignmentRectInsets: UIEdgeInsets {
         return UIEdgeInsets(top: 4.0, left: 2.0, bottom: 4.0, right: 2.0)
     }
     
-    override func layoutSublayers(of layer: CALayer) {
+    override public func layoutSublayers(of layer: CALayer) {
         
         if layer != self.layer {return}
         
@@ -316,42 +316,42 @@ import UIKit
     
     //MARK: - Convienience Colors
     
-    func setGradientVaryingHue(saturation:CGFloat,brightness:CGFloat){
+    public func setGradientVaryingHue(saturation:CGFloat,brightness:CGFloat){
         minColor = UIColor(hue: 0.0, saturation: saturation, brightness: brightness, alpha: 1.0)
         hasRainbow = true
     }
     
-    func setGradientVaryingSaturation(hue:CGFloat,brightness:CGFloat){
+    public func setGradientVaryingSaturation(hue:CGFloat,brightness:CGFloat){
         hasRainbow = false
         minColor = UIColor(hue: hue, saturation: 0.0, brightness: brightness, alpha: 1.0)
         maxColor = UIColor(hue: hue, saturation: 1.0, brightness: brightness, alpha: 1.0)
     }
     
-    func setGradientVaryingBrightness(hue:CGFloat,saturation:CGFloat){
+    public func setGradientVaryingBrightness(hue:CGFloat,saturation:CGFloat){
         hasRainbow = false
         minColor = UIColor.black
         maxColor = UIColor(hue: hue, saturation: saturation, brightness: 1.0, alpha: 1.0)
     }
     
-    func setGradientVaryingRed(green:CGFloat,blue:CGFloat){
+    public func setGradientVaryingRed(green:CGFloat,blue:CGFloat){
         hasRainbow = false
         minColor = UIColor(red: 0.0, green: green, blue: blue, alpha: 1.0)
         maxColor = UIColor(red: 1.0, green: green, blue: blue, alpha: 1.0)
     }
     
-    func setGradientVaryingGreen(red:CGFloat,blue:CGFloat){
+    public func setGradientVaryingGreen(red:CGFloat,blue:CGFloat){
         hasRainbow = false
         minColor = UIColor(red: red, green: 0.0, blue: blue, alpha: 1.0)
         maxColor = UIColor(red: red, green: 1.0, blue: blue, alpha: 1.0)
     }
     
-    func setGradientVaryingBlue(red:CGFloat,green:CGFloat){
+    public func setGradientVaryingBlue(red:CGFloat,green:CGFloat){
         hasRainbow = false
         minColor = UIColor(red: red, green: green, blue: 0.0, alpha: 1.0)
         maxColor = UIColor(red: red, green: green, blue: 1.0, alpha: 1.0)
     }
     
-    func setGradientForGrayscale(){
+    public func setGradientForGrayscale(){
         hasRainbow = false
         minColor = UIColor.black
         maxColor = UIColor.white
@@ -359,7 +359,7 @@ import UIKit
     
     //MARK: - Touch Tracking
     
-    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+    override public func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         super.beginTracking(touch, with: event)
         let pt = touch.location(in: self)
         
@@ -373,7 +373,7 @@ import UIKit
         return false
     }
     
-    override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+    override public func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         super.continueTracking(touch, with: event)
         let pt = touch.location(in: self)
         let newValue = valueForLocation(point: pt)
@@ -385,7 +385,7 @@ import UIKit
         return true
     }
     
-    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+    override public func endTracking(_ touch: UITouch?, with event: UIEvent?) {
         super.endTracking(touch, with: event)
         if let pt = touch?.location(in: self){
             let newValue = valueForLocation(point: pt)
