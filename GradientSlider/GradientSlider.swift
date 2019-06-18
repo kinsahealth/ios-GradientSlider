@@ -9,6 +9,8 @@
 import UIKit
 
 @IBDesignable class GradientSlider: UIControl {
+    typealias TrackColorTuple = (color: UIColor, position: NSNumber)
+    typealias ColorMap = [TrackColorTuple]
     
     static var defaultThickness:CGFloat = 2.0
     static var defaultThumbSize:CGFloat = 28.0
@@ -17,6 +19,7 @@ import UIKit
     @IBInspectable public var hasRainbow:Bool  = false {didSet{updateTrackColors()}}
     @IBInspectable public var minColor:UIColor = UIColor.blue {didSet{updateTrackColors()}}
     @IBInspectable public var maxColor:UIColor = UIColor.orange {didSet{updateTrackColors()}}
+    public var colorMap:ColorMap? {didSet{updateTrackColors()}} // setting this property ignores min and max color for non rainbow track.
     
     @IBInspectable var value: CGFloat {
         get{return _value}
@@ -443,10 +446,10 @@ import UIKit
         
         if !hasRainbow {
             // The colors to use
-            _trackLayer.colors = [minColor.cgColor, maxColor.cgColor]
+            _trackLayer.colors = colorMap != nil ? colorMap!.map({$0.color.cgColor}) : [minColor.cgColor, maxColor.cgColor]
             
             // The location of each color, from left to right (min value 0, max value 1)
-            _trackLayer.locations = [0.0, 1.0]
+            _trackLayer.locations = colorMap != nil ? colorMap!.map({$0.position}) : [0.0, 1.0]
             return
         }
         
